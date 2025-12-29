@@ -4,12 +4,16 @@ from forces import get_forces
 
 current_day = datetime.now().strftime("%A")
 
-monkeys_days = "Tuesday, Thursday, Saturday"
+monkeys_days = "Tuesday, Thursday, Saturday, Monday"
 if current_day in monkeys_days:
     users, client, stat =  get_monkeys()
 else:
     users, client, stat = get_forces() 
 
 for user, value in users.items():
-    result_string = stat(usernames=value['users'])
-    client.chat_postMessage(channel=value['channel_id'], text=result_string)
+    if user == 'all':
+        result_string = stat(usernames=value['users'])
+        try:
+            client.chat_postMessage(channel=value['channel_id'], text=result_string)
+        except Exception as e:
+            print(f"Error sending message to {value['channel_id']}: {e}")
